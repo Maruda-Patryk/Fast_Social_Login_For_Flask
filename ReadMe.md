@@ -58,7 +58,7 @@ def after_succes_login_user_will_return_here():
 ```
 
 
-To get curent user's resorce
+To get curent user's resources
 
 ```python
 @app.route('/paht')
@@ -156,18 +156,18 @@ How 'web_client.json' file should look (of course all keys should be fill with v
 Model of login user:
 ```json
 {
-    "email":<current_user_email_addres>,
-    "picture":<curent_user_picture>,
-    "name":<curent_user_full_name> 
+    "email":"<current_user_email_addres>",
+    "picture":"<curent_user_picture>",
+    "name":"<curent_user_full_name>" 
 }
 ```
-The name resources is <first_name> and <last_name> 
+The name resources is "<first_name>" and "<last_name>"
 
 Only if user use G suite:
 ```json
 {
     ...
-    "domain":<curent_user_domain> 
+    "domain":"<curent_user_domain>"
 }
 ```
 
