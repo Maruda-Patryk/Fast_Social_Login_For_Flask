@@ -50,7 +50,7 @@ class OAuth(object):
             session['auth_gmail_user'] = {
                     'email':response['email'],
                     'picture':response['picture'],
-                    'name':response['name']
+                    'name':split_full_name(response['name'])
                 }
 
             if 'hd' in response:
@@ -72,11 +72,13 @@ class OAuth(object):
         @wraps(page)
         def decorator(*args , **kwargs):
             if 'auth_gmail_user' in session:
-                self.email = json.dumps(session['auth_gmail_user']['email'])
-                self.picture = json.dumps(session['auth_gmail_user']['picture'])
-                self.name = json.dumps(session['auth_gmail_user']['name'])
-                if 'domain' in session['auth_gmail_user']:
-                    self.domain = json.dumps(session['auth_gmail_user']['domain'])
+                if not hasattr(self , 'email'):
+                    self.email = json.dumps(session['auth_gmail_user']['email'])
+                    self.picture = json.dumps(session['auth_gmail_user']['picture'])
+                    self.name= User_Name(**session['auth_gmail_user']['name'])
+
+                    if 'domain' in session['auth_gmail_user']:
+                        self.domain = json.dumps(session['auth_gmail_user']['domain'])
 
                 return page(*args,**kwargs)
             else:        
@@ -98,6 +100,14 @@ class LoginUser(object):
         args = (email , picture , name)
         return cls(*args) 
 
+class User_Name(OAuth):
+    def __init__(self, first_name , surname , full_name):
+        self.first_name = first_name
+        self.surname = surname
+        self.full_name = full_name
+
+    def __str__(self):
+        return self.full_name.__str__()
 
 def open_and_read(file):
     
@@ -107,3 +117,7 @@ def open_and_read(file):
     file.close()
 
     return first_linkt_to_redirect
+
+def split_full_name(name):
+    name_array = name.split(' ')
+    return {'first_name':name_array[0] , 'surname':name_array[1] , 'full_name':name}

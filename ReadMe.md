@@ -18,7 +18,6 @@ Supported social profile
 ### Installation
 
 To authorizate with Easy Social Login you must create 'OAuth' object 
-Note that 'app' object is a Flask Class instance
 
 ```python
 from google_login.login_with_google import OAuth
@@ -29,7 +28,7 @@ The 'web_client.json'is a .json file that you need to generate in you project on
 (In credentail section: OAuth Client Id > Web aplication)
 
 
-Note that the object named app in code is a Flask Class instance 
+Note that the object named app in code is a Flask object
 and remember that you need to create secret_key for you app 
 ```python
 app = Flask(__name__)
@@ -64,11 +63,21 @@ To get curent user's resources
 @app.route('/paht')
 @oauth.login_required
 def this_function_print_users_resource():
-    print(oauth.name)
-    print(oauth.email)
-    print(oauth.picture)
+    print(
+            'First Name: {}'.format(oauth.name.first_name) + '\n'
+            'Surname: {}'.format(oauth.name.surname) + '\n'
+            
+            'full_name: {}'.format(oauth.name.full_name) + '\n' 
+            # You can also .__str__() name,
+            # this will give the same value as 
+            # full_name
+            'full_name: {}'.format(oauth.name)
+            
+            'email: {}'.format(oauth.email) + '\n'
+            'picture: {}'.format(oauth.picture)
+        )
     if hasattr(oauth , 'domain'):
-        print(oauth.domain)
+        print('domain: {}'.format(oauth.domain))
     return ''
 ```
 
@@ -154,14 +163,18 @@ How 'web_client.json' file should look (of course all keys should be fill with v
 ### OAuth object resources
 
 Model of login user:
+
 ```json
 {
     "email":"<current_user_email_addres>",
     "picture":"<curent_user_picture>",
-    "name":"<curent_user_full_name>" 
+    "name":{
+        "full_name":"<curent_user_full_name>",
+        "first_name":"<curent_user_first_name>",
+        "surname": "<curent_user_surname>"
+        }
 }
 ```
-The name resources is "<first_name>" and "<last_name>"
 
 Only if user use G suite:
 ```json
