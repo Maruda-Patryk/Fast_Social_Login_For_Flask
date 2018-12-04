@@ -6,19 +6,23 @@ from google_auth_oauthlib.flow import Flow
 
 
 class OAuth(object):
-    def __init__(self, app , file_path , redirect_uri=None , scopes = [
-            'https://www.googleapis.com/auth/userinfo.profile',
-            'https://www.googleapis.com/auth/plus.me',
-            'https://www.googleapis.com/auth/userinfo.email']):
+    def __init__(self, app , file_path , redirect_uri=None , scopes = None):
 
         self.app = app
         self.file_path = file_path
-        self.scopes = scopes
+        self.scopes=[
+                'https://www.googleapis.com/auth/userinfo.profile',
+                'https://www.googleapis.com/auth/plus.me',
+                'https://www.googleapis.com/auth/userinfo.email'
+            ]
+        if scopes != None:
+            self.scopes.append(scopes)
+
         if redirect_uri == None:
             self.redirect_uri = open_and_read(file_path)
         else:
             self.redirect_uri = redirect_uri
-        self.kwargs = {'scopes':scopes , 'redirect_uri':self.redirect_uri}
+        self.kwargs = {'scopes':self.scopes , 'redirect_uri':self.redirect_uri}
 
     def login_with_google(self , page):
         flow = Flow.from_client_secrets_file(self.file_path,**self.kwargs)
